@@ -10,6 +10,10 @@ def extract_money(money_str):
     return float(money_str.replace("PLN", "").replace(",", ".").replace(" ", ""))
 
 
+def extract_date(date_str) -> datetime.date:
+    return datetime.datetime.strptime(date_str, "%d_%m_%Y").date()
+
+
 class Period:
     def __init__(self, filename: str):
         self.start = None
@@ -29,15 +33,13 @@ class Period:
                 f"Invalid filename: {self.filename}, Correct one is: start_date__end_date.csv")
 
         try:
-            d, m, y = start_str.split('_')
-            self.start = datetime.date(int(y), int(m), int(d))
+            self.start = extract_date(start_str)
         except ValueError:
             raise ValueError(
                 f"Invalid date format: {start_str}, Correct one: dd_mm_yyyy")
 
         try:
-            d, m, y = end_str.split('_')
-            self.end = datetime.date(int(y), int(m), int(d))
+            self.end = extract_date(end_str)
         except ValueError:
             raise ValueError(
                 f"Invalid date format: {end_str}, Correct one: dd_mm_yyyy")
@@ -78,19 +80,24 @@ def get_files(path=os.getcwd()):
             files.append(name)
     return files
 
+
 def main():
     for file in get_files():
         p = Period(file)
         p.load_data()
         f, c, i = p.analyse()
-        print("______________________________________________________")
-        print(f"{p.start} - {p.end}")
+        print("----------------------------------------------------")
+
+        print(f"{p.start} - {p.end}\n")
+
         print(f"Funding: {f:.2f} PLN")
         print(f"Cashout: {c:.2f} PLN")
-        print(f"Funding + Cashout: {(f + c):.2f} PLN")
         print(f"Interest: {i:.2f} PLN")
+        print("_" * 18)
         print(f"Total: {(f + c + i):.2f} PLN")
-        print("______________________________________________________")
+        print("_" * 18)
+        print("----------------------------------------------------")
+
 
 if __name__ == "__main__":
     main()
