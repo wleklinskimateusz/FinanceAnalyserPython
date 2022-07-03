@@ -78,16 +78,19 @@ def get_files(path=os.getcwd()):
             files.append(name)
     return files
 
+def main():
+    for file in get_files():
+        p = Period(file)
+        p.load_data()
+        f, c, i = p.analyse()
+        print("______________________________________________________")
+        print(f"{p.start} - {p.end}")
+        print(f"Funding: {f:.2f} PLN")
+        print(f"Cashout: {c:.2f} PLN")
+        print(f"Funding + Cashout: {(f + c):.2f} PLN")
+        print(f"Interest: {i:.2f} PLN")
+        print(f"Total: {(f + c + i):.2f} PLN")
+        print("______________________________________________________")
 
-for file in get_files():
-    p = Period(file)
-    p.load_data()
-    f, c, i = p.analyse()
-    print("______________________________________________________")
-    print(f"{p.start} - {p.end}")
-    print(f"Funding: {f:.2f} PLN")
-    print(f"Cashout: {c:.2f} PLN")
-    print(f"Funding + Cashout: {(f + c):.2f} PLN")
-    print(f"Interest: {i:.2f} PLN")
-    print(f"Total: {(f + c + i):.2f} PLN")
-    print("______________________________________________________")
+if __name__ == "__main__":
+    main()
