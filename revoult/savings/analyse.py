@@ -6,23 +6,23 @@ import os
 import pandas as pd
 
 
-def extract_money(money_str):
-    return float(money_str.replace("PLN", "").replace(",", ".").replace(" ", ""))
+def extract_money(money: str) -> float:
+    return float(money.replace("PLN", "").replace(",", ".").replace(" ", ""))
 
 
-def extract_date(date_str) -> datetime.date:
-    return datetime.datetime.strptime(date_str, "%d_%m_%Y").date()
+def extract_date(date: str) -> datetime.date:
+    return datetime.datetime.strptime(date, "%d_%m_%Y").date()
 
 
 class Period:
-    def __init__(self, filename: str):
+    def __init__(self, filename: str) -> None:
         self.start = None
         self.end = None
         self.filename = filename
         self.data = None
         self.set_dates()
 
-    def set_dates(self):
+    def set_dates(self) -> None:
         """
         Set the start and end dates of the period
         """
@@ -44,13 +44,13 @@ class Period:
             raise ValueError(
                 f"Invalid date format: {end_str}, Correct one: dd_mm_yyyy")
 
-    def load_data(self):
+    def load_data(self) -> None:
         """
         Load the data from the file
         """
         self.data = pd.read_csv(self.filename)
 
-    def analyse(self):
+    def analyse(self) -> tuple[float, float, float]:
         """
         Analyse the data
         """
@@ -73,7 +73,10 @@ class Period:
         return funding, cashout, interest
 
 
-def get_files(path=os.getcwd()):
+def get_files(path: str = os.getcwd()) -> list[str]:
+    """
+    Get all files in the given (default: current) directory
+    """
     files = []
     for name in os.listdir(path):
         if os.path.isfile(os.path.join(path, name)) and name.endswith('.csv'):
@@ -81,7 +84,7 @@ def get_files(path=os.getcwd()):
     return files
 
 
-def main():
+def main() -> float:
     for file in get_files():
         p = Period(file)
         p.load_data()
