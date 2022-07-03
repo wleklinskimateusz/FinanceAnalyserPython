@@ -1,6 +1,3 @@
-
-
-# get a list of all files in this directory
 import datetime
 import os
 import pandas as pd
